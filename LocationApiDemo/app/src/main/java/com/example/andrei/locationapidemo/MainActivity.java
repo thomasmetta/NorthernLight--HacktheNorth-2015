@@ -1,6 +1,7 @@
 package com.example.andrei.locationapidemo;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.location.Location;
 import android.os.AsyncTask;
 import android.support.v7.app.ActionBarActivity;
@@ -14,6 +15,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.firebase.client.Firebase;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -32,6 +34,8 @@ import com.squareup.okhttp.Response;
 
 
 import java.io.IOException;
+
+import butterknife.OnClick;
 
 
 public class MainActivity extends Activity implements GoogleApiClient.ConnectionCallbacks,
@@ -62,6 +66,16 @@ public class MainActivity extends Activity implements GoogleApiClient.Connection
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        Firebase.setAndroidContext(this);
+
+        final Button button = (Button) findViewById(R.id.startChat);
+        button.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, ChatMainActivity.class);
+                startActivity(intent);
+            }
+        });
+
         lblLocation = (TextView) findViewById(R.id.lblLocation);
         btnShowLocation = (Button) findViewById(R.id.buttonShowLocation);
         btnStartLocationUpdates = (Button) findViewById(R.id.buttonLocationUpdates);
@@ -76,7 +90,7 @@ public class MainActivity extends Activity implements GoogleApiClient.Connection
                                             public void onClick(View v) {
 
                                                 String name = mNameField.getText().toString();
-                                                Toast.makeText(MainActivity.this, name, Toast.LENGTH_LONG).show();
+                                                Toast.makeText(MainActivity.this, "Submitted", Toast.LENGTH_LONG).show();
 
                                                 new Connection().execute();
 
@@ -216,7 +230,7 @@ public class MainActivity extends Activity implements GoogleApiClient.Connection
             double latitude = mLastLocation.getLatitude();
             double longtitude = mLastLocation.getLongitude();
 
-            lblLocation.setText(latitude + ", " + longtitude);
+
         } else {
             lblLocation.setText("Couldn't get the location. Make sure location is enabled on the device");
         }
@@ -303,4 +317,6 @@ public class MainActivity extends Activity implements GoogleApiClient.Connection
     public void onConnectionFailed(ConnectionResult connectionResult) {
         Log.i(TAG, "Connection failed: " + connectionResult.getErrorCode());
     }
+
+
 }
