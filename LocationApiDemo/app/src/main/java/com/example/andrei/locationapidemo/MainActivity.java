@@ -2,6 +2,7 @@ package com.example.andrei.locationapidemo;
 
 import android.app.Activity;
 import android.location.Location;
+import android.os.AsyncTask;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -19,6 +20,18 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
+import com.squareup.okhttp.Callback;
+import com.squareup.okhttp.FormEncodingBuilder;
+import com.squareup.okhttp.MediaType;
+import com.squareup.okhttp.MultipartBuilder;
+import com.squareup.okhttp.OkHttpClient;
+import com.squareup.okhttp.Request;
+import com.squareup.okhttp.RequestBody;
+import com.squareup.okhttp.Response;
+
+
+
+import java.io.IOException;
 
 
 public class MainActivity extends Activity implements GoogleApiClient.ConnectionCallbacks,
@@ -56,6 +69,8 @@ public class MainActivity extends Activity implements GoogleApiClient.Connection
         mNameField = (EditText) findViewById(R.id.nameEditText);
         mSubmitButton = (Button) findViewById(R.id.submitButton);
 
+
+
         mSubmitButton.setOnClickListener(new View.OnClickListener() {
                                             @Override
                                             public void onClick(View v) {
@@ -63,10 +78,14 @@ public class MainActivity extends Activity implements GoogleApiClient.Connection
                                                 String name = mNameField.getText().toString();
                                                 Toast.makeText(MainActivity.this, name, Toast.LENGTH_LONG).show();
 
+                                                new Connection().execute();
+
+
 
                                             }
                                         }
         );
+
 
         if(checkPlayServices()) {
             buildGoogleApiClient();
@@ -86,7 +105,76 @@ public class MainActivity extends Activity implements GoogleApiClient.Connection
                 togglePeriodLocationUpdates();
             }
         });
+
+
     }
+
+
+    private class Connection extends AsyncTask {
+
+        @Override
+        protected Object doInBackground(Object... arg0) {
+
+            try {
+                run();
+            } catch (Exception ex) {
+                Log.e("foo","shit happened");
+                Log.e("foo", ex.toString());
+            }
+            return null;
+        }
+
+    }
+
+
+    public static final MediaType MEDIA_TYPE_MARKDOWN
+            = MediaType.parse("text/x-markdown; charset=utf-8");
+
+
+    public static final MediaType JSON
+            = MediaType.parse("application/json; charset=utf-8");
+
+    private final OkHttpClient client = new OkHttpClient();
+
+    public void run() throws Exception {
+        RequestBody formBody = new FormEncodingBuilder()
+                .add("message", mNameField.getText().toString())
+                .add("latitude", String.valueOf(mLastLocation.getLatitude()))
+                .add("longitude", String.valueOf(mLastLocation.getLongitude()))
+                .build();
+        Request request = new Request.Builder()
+                .url("https://secret-depths-3946.herokuapp.com/api/v1/posts")
+                .post(formBody)
+                .build();
+
+//        Response response = client.newCall(request).execute();
+//        if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
+
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Request request, IOException e) {
+                Log.e("foo", "more fuck ups");
+
+            }
+
+            @Override
+            public void onResponse(Response response) throws IOException {
+                Log.e("foo", "less fuck ups");
+            }
+        });
+
+
+
+//        System.out.println(response.body().string());
+    }
+
+
+
+
+
+
+
+
 
     @Override
      protected void onStart() {
@@ -124,7 +212,7 @@ public class MainActivity extends Activity implements GoogleApiClient.Connection
 
     private void displayLocation() {
         mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
-        if(mLastLocation != null) {
+        if (mLastLocation != null) {
             double latitude = mLastLocation.getLatitude();
             double longtitude = mLastLocation.getLongitude();
 
