@@ -9,6 +9,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,6 +24,8 @@ import com.google.android.gms.location.LocationServices;
 public class MainActivity extends Activity implements GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener, LocationListener{
 
+    private EditText mNameField;
+    private Button mSubmitButton;
 
     private static final String TAG = MainActivity.class.getSimpleName();
     private final static int PLAY_SERVICES_RESOLUTION_REQUEST = 1000;
@@ -49,6 +52,21 @@ public class MainActivity extends Activity implements GoogleApiClient.Connection
         lblLocation = (TextView) findViewById(R.id.lblLocation);
         btnShowLocation = (Button) findViewById(R.id.buttonShowLocation);
         btnStartLocationUpdates = (Button) findViewById(R.id.buttonLocationUpdates);
+
+        mNameField = (EditText) findViewById(R.id.nameEditText);
+        mSubmitButton = (Button) findViewById(R.id.submitButton);
+
+        mSubmitButton.setOnClickListener(new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View v) {
+
+                                                String name = mNameField.getText().toString();
+                                                Toast.makeText(MainActivity.this, name, Toast.LENGTH_LONG).show();
+
+
+                                            }
+                                        }
+        );
 
         if(checkPlayServices()) {
             buildGoogleApiClient();
