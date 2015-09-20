@@ -32,6 +32,8 @@ import com.squareup.okhttp.RequestBody;
 import com.squareup.okhttp.Response;
 
 
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.IOException;
 
@@ -42,6 +44,8 @@ public class MainActivity extends Activity implements GoogleApiClient.Connection
         GoogleApiClient.OnConnectionFailedListener, LocationListener{
 
     private EditText mNameField;
+    private EditText mMessageEditText;
+    private EditText mCityEditText;
     private Button mSubmitButton;
 
     private static final String TAG = MainActivity.class.getSimpleName();
@@ -80,7 +84,9 @@ public class MainActivity extends Activity implements GoogleApiClient.Connection
         btnShowLocation = (Button) findViewById(R.id.buttonShowLocation);
         btnStartLocationUpdates = (Button) findViewById(R.id.buttonLocationUpdates);
 
-        mNameField = (EditText) findViewById(R.id.nameEditText);
+        mNameField = (EditText) findViewById(R.id.personEditText);
+        mMessageEditText = (EditText) findViewById(R.id.messageEditText);
+        mCityEditText = (EditText) findViewById(R.id.cityEditText);
         mSubmitButton = (Button) findViewById(R.id.submitButton);
 
 
@@ -151,42 +157,25 @@ public class MainActivity extends Activity implements GoogleApiClient.Connection
     private final OkHttpClient client = new OkHttpClient();
 
     public void run() throws Exception {
-        RequestBody formBody = new FormEncodingBuilder()
-                .add("message", mNameField.getText().toString())
-                .add("latitude", String.valueOf(mLastLocation.getLatitude()))
-                .add("longitude", String.valueOf(mLastLocation.getLongitude()))
-                .build();
-        Request request = new Request.Builder()
-                .url("https://secret-depths-3946.herokuapp.com/api/v1/posts")
-                .post(formBody)
-                .build();
+
+
+  //      Response response = client.newCall(request).execute();
+
+
+   //     if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
+
+
+ //       System.out.println(response.body().string());
+
 
 //        Response response = client.newCall(request).execute();
 //        if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
-
-        client.newCall(request).enqueue(new Callback() {
-            @Override
-            public void onFailure(Request request, IOException e) {
-                Log.e("foo", "more fuck ups");
-
-            }
-
-            @Override
-            public void onResponse(Response response) throws IOException {
-                Log.e("foo", "less fuck ups");
-            }
-        });
+        sendName(client, mNameField.getText().toString());
 
 
 
 //        System.out.println(response.body().string());
     }
-
-
-
-
-
-
 
 
 
@@ -223,6 +212,143 @@ public class MainActivity extends Activity implements GoogleApiClient.Connection
         super.onPause();
         stopLocationUpdates();
     }
+
+    private void sendName(final OkHttpClient client, String name) {
+        RequestBody formBody = new FormEncodingBuilder()
+                .add("name", mNameField.getText().toString())
+                .build();
+        Request request = new Request.Builder()
+                .url("https://secret-depths-3946.herokuapp.com/api/v1/users")
+                .post(formBody)
+                .build();
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Request request, IOException e) {
+
+                Log.d("foo", "not working");
+
+            }
+
+            @Override
+            public void onResponse(Response response) throws IOException {
+                JSONObject jObject = null;
+                try {
+                    jObject = new JSONObject(response.body().string());
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                String id = null;
+                try {
+                    id = jObject.getString("user_id");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                String address = mCityEditText.getText().toString();
+                sendDestination(client, id, address);
+                Log.d("foo", "sending from sendName");
+                Log.d("foo", "id: " + id + " address: " + address);
+            }
+        });
+    }
+
+    private void sendDestination(final OkHttpClient client, String id, String address) {
+
+        RequestBody formBody = new FormEncodingBuilder()
+                .add("user_id", id)
+                .add("address", address)
+                .build();
+        Request request = new Request.Builder()
+                .url("https://secret-depths-3946.herokuapp.com/api/v1/destinations")
+                .post(formBody)
+                .build();
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Request request, IOException e) {
+
+                Log.d("foo", "not working second time");
+
+            }
+
+            @Override
+            public void onResponse(Response response) throws IOException {
+
+                Log.d("foo", "receive from sendDes" + response.toString());
+                String message = mMessageEditText.getText().toString();
+                double latitude = mLastLocation.getLatitude();
+                double longitude = mLastLocation.getLongitude();
+
+                sendPost(client, message, latitude, longitude);
+
+
+            }
+        });
+
+        RequestBody formBody1 = new FormEncodingBuilder()
+                .add("user_id", id)
+                .add("latitude", String.valueOf(mLastLocation.getLatitude()))
+                .add("longtitude", String.valueOf(mLastLocation.getLongitude()))
+                .build();
+        Request request1 = new Request.Builder()
+                .url("https://secret-depths-3946.herokuapp.com/api/v1/locations")
+                .post(formBody1)
+                .build();
+        client.newCall(request1).enqueue(new Callback() {
+            @Override
+            public void onFailure(Request request1, IOException e) {
+
+            }
+
+            @Override
+            public void onResponse(Response response) throws IOException {
+
+
+
+            }
+        });
+
+
+    }
+
+
+
+    private void sendPost(OkHttpClient client, String message, double latitdue, double longitude) {
+
+        RequestBody formBody = new FormEncodingBuilder()
+                .add("message", message)
+                .add("latitude", String.valueOf(mLastLocation.getLatitude()))
+                .add("longitude", String.valueOf(mLastLocation.getLongitude()))
+                .build();
+        Request request = new Request.Builder()
+                .url("https://secret-depths-3946.herokuapp.com/api/v1/posts")
+                .post(formBody)
+                .build();
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Request request, IOException e) {
+
+                Log.d("foo", "not working third time");
+
+            }
+
+            @Override
+            public void onResponse(Response response) throws IOException {
+
+                Log.d("foo", "receive from sendDes" + response.toString());
+
+
+            }
+        });
+
+
+
+
+    }
+
+
+
+
+
 
     private void displayLocation() {
         mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
