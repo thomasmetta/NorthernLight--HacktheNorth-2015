@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.andrei.locationapidemo" >
+    package="com.example.thomas.northernlight" >
 
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
@@ -10,7 +10,7 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name=".MainActivity"
+            android:name="me.example.thomas.northernlight.MainActivity"
             android:label="@string/app_name" >
             <meta-data
                 android:name="com.google.android.gms.version"
@@ -23,12 +23,12 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ChatMainActivity"
+            android:name="me.example.thomas.northernlight.ChatMainActivity"
             android:label="@string/title_activity_chat_main"
-            android:parentActivityName=".MainActivity" >
+            android:parentActivityName="me.example.thomas.northernlight.MainActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.andrei.locationapidemo.MainActivity" />
+                android:value="me.example.thomas.northernlight.MainActivity" />
         </activity>
     </application>
 

@@ -5,23 +5,12 @@
     android:gravity="center_horizontal"
     android:background="#7184ff" >
 
-    <TextView
-        android:text="@string/lbl_you_are_at"
-        android:layout_marginTop="25dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="@color/white"
-        android:textSize="25dp"
-        android:textStyle="bold"
-        />
-
-    <TextView
-        android:id="@+id/lblLocation"
-        android:padding="15dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="@color/white"
-        android:textSize="16dp" />
+    <ImageView
+        android:layout_width="304dp"
+        android:layout_height="125dp"
+        android:id="@+id/imageView"
+        android:layout_gravity="center_horizontal"
+        android:background="@drawable/logo"/>
 
     <EditText
         android:layout_width="wrap_content"
@@ -29,7 +18,6 @@
         android:inputType="textPersonName"
         android:ems="10"
         android:id="@+id/personEditText"
-        android:layout_gravity="center_horizontal"
         android:hint="Enter your name"/>
 
     <EditText
@@ -38,7 +26,6 @@
         android:inputType="textPersonName"
         android:ems="10"
         android:id="@+id/messageEditText"
-        android:layout_gravity="center_horizontal"
         android:hint="Enter your message"/>
 
     <EditText
@@ -47,19 +34,19 @@
         android:inputType="textPersonName"
         android:ems="10"
         android:id="@+id/cityEditText"
-        android:layout_gravity="center_horizontal"
         android:hint="Enter your destination (city)"/>
 
     <Button
         android:id="@+id/buttonShowLocation"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="10dp"
         android:background="@color/btn_bg"
         android:paddingLeft="20dp"
         android:paddingRight="20dp"
         android:text="@string/btn_get_location"
-        android:textColor="@color/white"/>
+        android:textColor="@color/white"
+        android:layout_gravity="center_horizontal"/>
 
     <Button
         android:id="@+id/buttonLocationUpdates"
@@ -73,24 +60,34 @@
         android:textColor="@color/white"/>
 
     <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="120dp"
+        android:layout_height="69dp"
         android:text="Submit"
         android:id="@+id/submitButton"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="70dp"/>
+        android:layout_marginTop="10dp"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Start Chat"
+        android:id="@+id/startChat"
+        android:background="#40ffffff"
+        android:layout_gravity="center_horizontal"/>
+
+    <TextView
+        android:id="@+id/lblLocation"
+        android:padding="15dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/white"
+        android:textSize="16dp" />
 
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Start Chat"
-            android:id="@+id/startChat"
-            android:background="#40ffffff"/>
     </LinearLayout>
 
 </LinearLayout>
