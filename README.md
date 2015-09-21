@@ -1,4 +1,11 @@
 # Northern Light
+
+#Demo
+
+
+<a href="https://youtu.be/sTeGwIuicTc
+" target="_blank"><img src="https://cloud.githubusercontent.com/assets/8930332/9996584/ad5e27bc-6055-11e5-9d33-853f5dd6f62d.PNG" 
+alt="Demo" width="240" height="180" border="10" /></a>
 #What it does
 
 It provides a sense of community and support for refugees trying to reach safety. 
